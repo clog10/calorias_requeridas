@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>controlTA</servlet-name>
+        <servlet-class>control.controlTA</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>controlUser</servlet-name>
+        <servlet-class>control.controlUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>controlIS</servlet-name>
+        <servlet-class>control.controlIS</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>login</servlet-name>
+        <servlet-class>control.login</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>controlTA</servlet-name>
+        <url-pattern>/controlTA</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>controlUser</servlet-name>
+        <url-pattern>/controlUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>controlIS</servlet-name>
+        <url-pattern>/controlIS</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>login</servlet-name>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

@@ -67,7 +67,7 @@ public class controlUser extends HttpServlet {
             
             TipoactividadJpaController controlTA;
             controlTA = new TipoactividadJpaController(utx,emf);
-            u.setTipoact(controlTA.findTipoactividad(acti));
+            u.setTipoact(controlTA.findEntity(acti));
             
             user.create(u);
             RequestDispatcher calculo = request.getRequestDispatcher("ingresar_indicadores.jsp");

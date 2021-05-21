@@ -23,20 +23,15 @@ import modelo.Usuario;
  *
  * @author Carlos Loaeza
  */
-public class TipoactividadJpaController implements Serializable {
+public class TipoactividadJpaController extends JpaControladora implements Serializable {
 
     public TipoactividadJpaController(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
-        this.emf = emf;
-    }
-    private UserTransaction utx = null;
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        super(utx, emf, Tipoactividad.class);
     }
 
-    public void create(Tipoactividad tipoactividad) throws RollbackFailureException, Exception {
+    @Override
+    public void create(Object entidad) throws RollbackFailureException, Exception {
+        Tipoactividad tipoactividad = (Tipoactividad) entidad;
         if (tipoactividad.getIndicadoressaludList() == null) {
             tipoactividad.setIndicadoressaludList(new ArrayList<Indicadoressalud>());
         }
@@ -93,7 +88,8 @@ public class TipoactividadJpaController implements Serializable {
         }
     }
 
-    public void edit(Tipoactividad tipoactividad) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Object entidad) throws NonexistentEntityException, RollbackFailureException, Exception {
+        Tipoactividad tipoactividad = (Tipoactividad) entidad;
         EntityManager em = null;
         try {
             utx.begin();
@@ -162,7 +158,7 @@ public class TipoactividadJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = tipoactividad.getIdtact();
-                if (findTipoactividad(id) == null) {
+                if (findEntity(id) == null) {
                     throw new NonexistentEntityException("The tipoactividad with id " + id + " no longer exists.");
                 }
             }
@@ -174,6 +170,7 @@ public class TipoactividadJpaController implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
@@ -212,29 +209,8 @@ public class TipoactividadJpaController implements Serializable {
         }
     }
 
-    public List<Tipoactividad> findTipoactividadEntities() {
-        return findTipoactividadEntities(true, -1, -1);
-    }
-
-    public List<Tipoactividad> findTipoactividadEntities(int maxResults, int firstResult) {
-        return findTipoactividadEntities(false, maxResults, firstResult);
-    }
-
-    private List<Tipoactividad> findTipoactividadEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createQuery("select object(o) from Tipoactividad as o");
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Tipoactividad findTipoactividad(Integer id) {
+    @Override
+    public Tipoactividad findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Tipoactividad.class, id);
@@ -243,7 +219,8 @@ public class TipoactividadJpaController implements Serializable {
         }
     }
 
-    public int getTipoactividadCount() {
+    @Override
+    public int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             Query q = em.createQuery("select count(o) from Tipoactividad as o");
@@ -252,5 +229,5 @@ public class TipoactividadJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

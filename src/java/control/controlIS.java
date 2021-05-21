@@ -60,7 +60,7 @@ public class controlIS extends HttpServlet {
             TipoactividadJpaController controlTA;
             controlTA = new TipoactividadJpaController(utx, emf);
 
-            List<Usuario> u = user.findUsuarioEntities();
+            List<Usuario> u = user.findEntities();
             Usuario usuario = u.get(u.size() - 1);
 
             Indicadoressalud indicadores = new Indicadoressalud();
@@ -69,7 +69,7 @@ public class controlIS extends HttpServlet {
             indicadores.setEstatura(estatura);
             indicadores.setPeso(peso);
             indicadores.setCintura(cintura);
-            indicadores.setTipoact(controlTA.findTipoactividad(acti));
+            indicadores.setTipoact(controlTA.findEntity(acti));
             indicadores.setIdusuario(usuario);
 
             String nombre = usuario.getNombre();

@@ -15,28 +15,29 @@
     <center>
         <table>
             <thead>
-                <th colspan="2" align="center">Resultados</th>
+            <th colspan="2" align="center">Resultados</th>
             </thead>
             <tbody>
                 <tr>
-                        <td align="right">Nombre: </td>
-                        <td>
-                            <input type="text" name="nombre" value="${nombre}" readonly="" style="border: 0;">
-                        </td>
-                    </tr>
+                    <td align="right">Nombre: </td>
+                    <td>
+                        <input type="text" name="nombre" value="${nombre}" readonly="" style="border: 0;">
+                    </td>
+                </tr>
                 <tr>
-                        <td colspan="2" align="center">Resultados de los indicadores básicos</td>
-                    </tr>
+                    <td colspan="2" align="center">Resultados de los indicadores básicos</td>
+                </tr>
                 <tr>
-                        <td align="right">IMC: </td>
-                        <td><input type="text" name="imc" value="${imc}" readonly></td>
-                    </tr>
-                    <tr>
-                        <td align="right">ICC: </td>
-                        <td><input type="text" name="icc" value="${icc}" readonly></td>
-                    </tr>
+                    <td align="right">IMC: </td>
+                    <td><input type="text" name="imc" value="${imc}" readonly></td>
+                </tr>
+                <tr>
+                    <td align="right">ICC: </td>
+                    <td><input type="text" name="icc" value="${icc}" readonly></td>
+                </tr>
             </tbody>
         </table>
+        <a href="index.jsp">Volver al inicio</a>
     </center>
-    </body>
+</body>
 </html>

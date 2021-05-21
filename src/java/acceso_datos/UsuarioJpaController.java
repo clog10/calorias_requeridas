@@ -23,20 +23,15 @@ import modelo.Usuario;
  *
  * @author Carlos Loaeza
  */
-public class UsuarioJpaController implements Serializable {
+public class UsuarioJpaController extends JpaControladora implements Serializable {
 
     public UsuarioJpaController(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
-        this.emf = emf;
-    }
-    private UserTransaction utx = null;
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        super(utx, emf, Usuario.class);
     }
 
-    public void create(Usuario usuario) throws RollbackFailureException, Exception {
+    @Override
+    public void create(Object entidad) throws RollbackFailureException, Exception {
+        Usuario usuario = (Usuario) entidad;
         if (usuario.getIndicadoressaludList() == null) {
             usuario.setIndicadoressaludList(new ArrayList<Indicadoressalud>());
         }
@@ -84,7 +79,9 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public void edit(Usuario usuario) throws NonexistentEntityException, RollbackFailureException, Exception {
+    @Override
+    public void edit(Object entidad) throws NonexistentEntityException, RollbackFailureException, Exception {
+        Usuario usuario = (Usuario) entidad;
         EntityManager em = null;
         try {
             utx.begin();
@@ -141,7 +138,7 @@ public class UsuarioJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = usuario.getIdusuario();
-                if (findUsuario(id) == null) {
+                if (findEntity(id) == null) {
                     throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
                 }
             }
@@ -153,6 +150,7 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
@@ -191,29 +189,8 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public List<Usuario> findUsuarioEntities() {
-        return findUsuarioEntities(true, -1, -1);
-    }
-
-    public List<Usuario> findUsuarioEntities(int maxResults, int firstResult) {
-        return findUsuarioEntities(false, maxResults, firstResult);
-    }
-
-    private List<Usuario> findUsuarioEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createQuery("select object(o) from Usuario as o");
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Usuario findUsuario(Integer id) {
+    @Override
+    public Usuario findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Usuario.class, id);
@@ -222,7 +199,8 @@ public class UsuarioJpaController implements Serializable {
         }
     }
 
-    public int getUsuarioCount() {
+    @Override
+    public int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             Query q = em.createQuery("select count(o) from Usuario as o");
@@ -231,5 +209,5 @@ public class UsuarioJpaController implements Serializable {
             em.close();
         }
     }
-    
+
 }

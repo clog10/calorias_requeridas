@@ -39,7 +39,7 @@ public class controlTA extends HttpServlet {
             emf = Persistence.createEntityManagerFactory("calorias_requeridasPU"); 
             TipoactividadJpaController controlTA;
             controlTA = new TipoactividadJpaController(utx,emf);
-            List<Tipoactividad> actividades = controlTA.findTipoactividadEntities();
+            List<Tipoactividad> actividades = controlTA.findEntities();
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");

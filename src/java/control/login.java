@@ -46,7 +46,7 @@ public class login extends HttpServlet {
             UsuarioJpaController user;
             user = new UsuarioJpaController(utx, emf);
             
-            List<Usuario> usuarios = user.findUsuarioEntities();
+            List<Usuario> usuarios = user.findEntities();
 
             Usuario u;
             

@@ -22,20 +22,16 @@ import modelo.Usuario;
  *
  * @author Carlos Loaeza
  */
-public class IndicadoressaludJpaController implements Serializable {
+public class IndicadoressaludJpaController extends JpaControladora implements Serializable {
 
     public IndicadoressaludJpaController(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
-        this.emf = emf;
-    }
-    private UserTransaction utx = null;
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+        super(utx, emf, Indicadoressalud.class);
     }
 
-    public void create(Indicadoressalud indicadoressalud) throws RollbackFailureException, Exception {
+    
+    @Override
+    public void create(Object entidad) throws RollbackFailureException, Exception {
+        Indicadoressalud indicadoressalud = (Indicadoressalud) entidad;
         EntityManager em = null;
         try {
             utx.begin();
@@ -74,7 +70,9 @@ public class IndicadoressaludJpaController implements Serializable {
         }
     }
 
-    public void edit(Indicadoressalud indicadoressalud) throws NonexistentEntityException, RollbackFailureException, Exception {
+    @Override
+    public void edit(Object entidad) throws NonexistentEntityException, RollbackFailureException, Exception {
+        Indicadoressalud indicadoressalud = (Indicadoressalud) entidad;
         EntityManager em = null;
         try {
             utx.begin();
@@ -119,7 +117,7 @@ public class IndicadoressaludJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = indicadoressalud.getIdindsalud();
-                if (findIndicadoressalud(id) == null) {
+                if (findEntity(id) == null) {
                     throw new NonexistentEntityException("The indicadoressalud with id " + id + " no longer exists.");
                 }
             }
@@ -131,6 +129,7 @@ public class IndicadoressaludJpaController implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
@@ -169,29 +168,8 @@ public class IndicadoressaludJpaController implements Serializable {
         }
     }
 
-    public List<Indicadoressalud> findIndicadoressaludEntities() {
-        return findIndicadoressaludEntities(true, -1, -1);
-    }
-
-    public List<Indicadoressalud> findIndicadoressaludEntities(int maxResults, int firstResult) {
-        return findIndicadoressaludEntities(false, maxResults, firstResult);
-    }
-
-    private List<Indicadoressalud> findIndicadoressaludEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createQuery("select object(o) from Indicadoressalud as o");
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Indicadoressalud findIndicadoressalud(Integer id) {
+    @Override
+    public Indicadoressalud findEntity(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Indicadoressalud.class, id);
@@ -200,7 +178,8 @@ public class IndicadoressaludJpaController implements Serializable {
         }
     }
 
-    public int getIndicadoressaludCount() {
+    @Override
+    public int getEntityCount() {
         EntityManager em = getEntityManager();
         try {
             Query q = em.createQuery("select count(o) from Indicadoressalud as o");

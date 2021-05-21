@@ -5,6 +5,7 @@
  */
 package control;
 
+import acceso_datos.JpaControladora;
 import acceso_datos.TipoactividadJpaController;
 import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
@@ -24,25 +25,23 @@ import javax.transaction.UserTransaction;
 import java.sql.Date;
 import javax.servlet.RequestDispatcher;
 import modelo.Usuario;
+
 /**
  *
  * @author Carlos Loaeza
  */
-public class controlUser extends HttpServlet {
+public class controlUser extends MiServlet {
 
-    @PersistenceUnit
-    private EntityManagerFactory emf = null;
-    @Resource
-    private UserTransaction utx;
+    public controlUser() {
+        super();
+    }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException, Exception {
+    @Override
+    public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
 
-            emf = Persistence.createEntityManagerFactory("calorias_requeridasPU");
-            
             String nombre = request.getParameter("nombre");
             String s = request.getParameter("sexo");
             char sexo = s.charAt(0);
@@ -53,10 +52,9 @@ public class controlUser extends HttpServlet {
             int acti = Integer.parseInt(request.getParameter("actividad"));
             String usuario = request.getParameter("usuario");
             String contrasenia = request.getParameter("contrasenia");
-            
-            UsuarioJpaController user;
-            user = new UsuarioJpaController(utx, emf);
-            
+
+            user = (UsuarioJpaController) crearControlador();
+
             Usuario u = new Usuario();
             u.setNombre(nombre);
             u.setSexo(sexo);
@@ -64,17 +62,23 @@ public class controlUser extends HttpServlet {
             u.setFechanacimiento(fecha_nac);
             u.setUsuario(usuario);
             u.setContrasenia(contrasenia);
-            
-            TipoactividadJpaController controlTA;
-            controlTA = new TipoactividadJpaController(utx,emf);
+
+            controlTA = new TipoactividadJpaController(utx, emf);
             u.setTipoact(controlTA.findEntity(acti));
-            
+
             user.create(u);
             RequestDispatcher calculo = request.getRequestDispatcher("ingresar_indicadores.jsp");
             request.setAttribute("actividad", acti);
-            request.setAttribute("nombre",nombre);     
+            request.setAttribute("nombre", nombre);
             calculo.forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(controlUser.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public JpaControladora crearControlador() {
+        return new UsuarioJpaController(utx, emf);
     }
 
     @Override
@@ -82,9 +86,7 @@ public class controlUser extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
-        } catch (ParseException ex) {
-            Logger.getLogger(controlUser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(controlUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -94,9 +96,7 @@ public class controlUser extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
-        } catch (ParseException ex) {
-            Logger.getLogger(controlUser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
+        } catch (IOException | ServletException ex) {
             Logger.getLogger(controlUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

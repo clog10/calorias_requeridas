@@ -5,6 +5,7 @@
  */
 package control;
 
+import acceso_datos.JpaControladora;
 import acceso_datos.TipoactividadJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,27 +25,23 @@ import modelo.Tipoactividad;
  *
  * @author Carlos Loaeza
  */
-public class controlTA extends HttpServlet {
+public class controlTA extends MiServlet {
 
-    @PersistenceUnit
-    private EntityManagerFactory emf = null;
-    @Resource
-    private UserTransaction utx;
-    
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public controlTA() {
+        super();
+    }
+
+    @Override
+    public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            emf = Persistence.createEntityManagerFactory("calorias_requeridasPU"); 
-            TipoactividadJpaController controlTA;
-            controlTA = new TipoactividadJpaController(utx,emf);
+            controlTA = (TipoactividadJpaController) crearControlador();
             List<Tipoactividad> actividades = controlTA.findEntities();
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Actividades</title>");            
+            out.println("<title>Actividades</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<center>");
@@ -53,11 +50,11 @@ public class controlTA extends HttpServlet {
             out.println("<th colspan=\"3\" align=\"center\">Actividades registradas</th>");
             out.println("</thead>");
             out.println("<tbody>");
-            for(int i = 0; i<actividades.size(); i++){
+            for (int i = 0; i < actividades.size(); i++) {
                 out.println("<tr>");
-                out.println("<td>"+actividades.get(i).getIdtact()+"</td>");
-                out.print("<td>"+actividades.get(i).getDescripcion()+"</td>");
-                out.print("<td>"+actividades.get(i).getActividades()+"</td>");
+                out.println("<td>" + actividades.get(i).getIdtact() + "</td>");
+                out.print("<td>" + actividades.get(i).getDescripcion() + "</td>");
+                out.print("<td>" + actividades.get(i).getActividades() + "</td>");
                 out.println("<tr>");
             }
             out.println("</tbody>");
@@ -66,6 +63,11 @@ public class controlTA extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
+    }
+
+    @Override
+    public JpaControladora crearControlador() {
+        return new TipoactividadJpaController(utx, emf);
     }
 
     @Override

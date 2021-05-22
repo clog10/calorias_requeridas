@@ -32,10 +32,6 @@ import modelo.Usuario;
  */
 public class controlUser extends MiServlet {
 
-    public controlUser() {
-        super();
-    }
-
     @Override
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");

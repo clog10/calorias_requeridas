@@ -5,6 +5,7 @@
  */
 package control;
 
+import acceso_datos.JpaControladora;
 import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,43 +26,35 @@ import modelo.Usuario;
  *
  * @author Carlos Loaeza
  */
-public class login extends HttpServlet {
+public class login extends MiServlet {
 
-    @PersistenceUnit
-    private EntityManagerFactory emf = null;
-    @Resource
-    private UserTransaction utx;
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @Override
+    public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             RequestDispatcher calculo = request.getRequestDispatcher("");
-            emf = Persistence.createEntityManagerFactory("calorias_requeridasPU");
 
             String usuario = request.getParameter("usuario");
             String contrasenia = request.getParameter("contrasenia");
 
-            UsuarioJpaController user;
-            user = new UsuarioJpaController(utx, emf);
-            
+            user = (UsuarioJpaController) crearControlador();
+
             List<Usuario> usuarios = user.findEntities();
 
             Usuario u;
-            
+
             int acti = 0;
             String nombre = "";
-            
-            
-            String []users = new String[usuarios.size()];
-            String []contrasenias = new String[usuarios.size()];
-            
-            for(int i = 0; i< usuarios.size(); i++){
+
+            String[] users = new String[usuarios.size()];
+            String[] contrasenias = new String[usuarios.size()];
+
+            for (int i = 0; i < usuarios.size(); i++) {
                 users[i] = usuarios.get(i).getUsuario();
                 contrasenias[i] = usuarios.get(i).getContrasenia();
             }
-            
+
             for (int i = 0; i < users.length; i++) {
                 if (usuario.equals(users[i]) && contrasenia.equals(contrasenias[i])) {
                     calculo = request.getRequestDispatcher("ingresar_indicadores.jsp");
@@ -74,10 +67,16 @@ public class login extends HttpServlet {
                     break;
                 } else {
                     calculo = request.getRequestDispatcher("index.jsp");
+                    calculo.forward(request, response);
                 }
             }
 
         }
+    }
+
+    @Override
+    public JpaControladora crearControlador() {
+        return new UsuarioJpaController(utx, emf);
     }
 
     @Override

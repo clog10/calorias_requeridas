@@ -41,6 +41,10 @@
             <br>
             <input type="submit" value="Ver Actividades" >
         </form>
+        <form name="usuarios" action="controlU" method="post">
+            <br>
+            <input type="submit" value="Ver Usuarios Registrados" >
+        </form>
     </center>
 </body>
 </html>

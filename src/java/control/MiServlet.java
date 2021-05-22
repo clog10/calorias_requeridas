@@ -5,6 +5,7 @@
  */
 package control;
 
+import acceso_datos.IndicadoressaludJpaController;
 import acceso_datos.JpaControladora;
 import acceso_datos.TipoactividadJpaController;
 import acceso_datos.UsuarioJpaController;
@@ -29,15 +30,12 @@ import javax.transaction.UserTransaction;
 public abstract class MiServlet extends HttpServlet {
 
     @PersistenceUnit
-    protected EntityManagerFactory emf = null;
+    protected EntityManagerFactory emf = Persistence.createEntityManagerFactory("calorias_requeridasPU");
     @Resource
     protected UserTransaction utx;
     protected UsuarioJpaController user;
     protected TipoactividadJpaController controlTA;
-    
-    public MiServlet(){
-        emf = Persistence.createEntityManagerFactory("calorias_requeridasPU");
-    }
+    protected IndicadoressaludJpaController indicador;
     
     public abstract void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 

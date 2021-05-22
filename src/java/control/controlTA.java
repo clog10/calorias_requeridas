@@ -27,10 +27,6 @@ import modelo.Tipoactividad;
  */
 public class controlTA extends MiServlet {
 
-    public controlTA() {
-        super();
-    }
-
     @Override
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -55,10 +51,12 @@ public class controlTA extends MiServlet {
                 out.println("<td>" + actividades.get(i).getIdtact() + "</td>");
                 out.print("<td>" + actividades.get(i).getDescripcion() + "</td>");
                 out.print("<td>" + actividades.get(i).getActividades() + "</td>");
-                out.println("<tr>");
+                out.println("</tr>");
             }
             out.println("</tbody>");
             out.println("</table>");
+            out.println("<br>");
+            out.println("<a href=\"index.jsp\">Volver al inicio</a>");
             out.println("</center>");
             out.println("</body>");
             out.println("</html>");

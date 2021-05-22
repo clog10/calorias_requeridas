@@ -29,7 +29,6 @@ import modelo.Usuario;
  * @author Carlos Loaeza
  */
 public class controlIS extends MiServlet {
-
     
     @Override
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,7 +44,6 @@ public class controlIS extends MiServlet {
             int cadera = Integer.parseInt(request.getParameter("cadera"));
             int acti = Integer.parseInt(request.getParameter("actividad"));
 
-            IndicadoressaludJpaController indicador;
             indicador = (IndicadoressaludJpaController) crearControlador();
             user = new UsuarioJpaController(utx, emf);
             controlTA = new TipoactividadJpaController(utx, emf);

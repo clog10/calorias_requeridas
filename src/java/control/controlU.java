@@ -10,6 +10,7 @@ import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,18 +61,23 @@ public class controlU extends MiServlet {
             out.println("<th align=\"center\">Actividad</th>");
             out.println("</thead>");
             out.println("<tbody>");
-            for (int i = 0; i < usuarios.size(); i++) {
+            
+            Iterator iterador = usuarios.iterator();
+            Usuario usuario;
+            while(iterador.hasNext()){
+                usuario = (Usuario) iterador.next();
                 out.println("<tr>");
-                out.println("<td>" + usuarios.get(i).getIdusuario()+ "</td>");
-                out.println("<td align=\"center\">"+usuarios.get(i).getNombre()+"</td>");
-                out.println("<td align=\"center\">"+usuarios.get(i).getSexo()+"</td>");
-                out.println("<td align=\"center\">"+new SimpleDateFormat("dd-MM-yyyy").format(usuarios.get(i).getFecharegistro())+"</td>");
-                out.println("<td align=\"center\">"+usuarios.get(i).getUsuario()+"</td>");
-                out.println("<td align=\"center\">"+usuarios.get(i).getContrasenia()+"</td>");
-                out.println("<td align=\"center\">"+new SimpleDateFormat("dd-MM-yyyy").format(usuarios.get(i).getFechanacimiento())+"</td>");
-                out.println("<td align=\"center\">"+usuarios.get(i).getTipoact().getDescripcion()+"</td>");
+                out.println("<td>" + usuario.getIdusuario()+ "</td>");
+                out.println("<td align=\"center\">"+usuario.getNombre()+"</td>");
+                out.println("<td align=\"center\">"+usuario.getSexo()+"</td>");
+                out.println("<td align=\"center\">"+new SimpleDateFormat("dd-MM-yyyy").format(usuario.getFecharegistro())+"</td>");
+                out.println("<td align=\"center\">"+usuario.getUsuario()+"</td>");
+                out.println("<td align=\"center\">"+usuario.getContrasenia()+"</td>");
+                out.println("<td align=\"center\">"+new SimpleDateFormat("dd-MM-yyyy").format(usuario.getFechanacimiento())+"</td>");
+                out.println("<td align=\"center\">"+usuario.getTipoact().getDescripcion()+"</td>");
                 out.println("</tr>");
             }
+
             out.println("</tbody>");
             out.println("</table>");
             out.println("<br>");

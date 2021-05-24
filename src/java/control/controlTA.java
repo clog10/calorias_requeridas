@@ -9,6 +9,7 @@ import acceso_datos.JpaControladora;
 import acceso_datos.TipoactividadJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
@@ -46,13 +47,18 @@ public class controlTA extends MiServlet {
             out.println("<th colspan=\"3\" align=\"center\">Actividades registradas</th>");
             out.println("</thead>");
             out.println("<tbody>");
-            for (int i = 0; i < actividades.size(); i++) {
+            
+            Iterator iterador = actividades.iterator();
+            Tipoactividad actividad;
+            while(iterador.hasNext()){
+                actividad = (Tipoactividad) iterador.next();
                 out.println("<tr>");
-                out.println("<td>" + actividades.get(i).getIdtact() + "</td>");
-                out.print("<td>" + actividades.get(i).getDescripcion() + "</td>");
-                out.print("<td>" + actividades.get(i).getActividades() + "</td>");
+                out.println("<td>" + actividad.getIdtact() + "</td>");
+                out.print("<td>" + actividad.getDescripcion() + "</td>");
+                out.print("<td>" + actividad.getActividades() + "</td>");
                 out.println("</tr>");
             }
+            
             out.println("</tbody>");
             out.println("</table>");
             out.println("<br>");

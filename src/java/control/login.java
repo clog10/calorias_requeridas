@@ -9,6 +9,7 @@ import acceso_datos.JpaControladora;
 import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
@@ -46,17 +47,21 @@ public class login extends MiServlet {
 
             int acti = 0;
             String nombre = "";
-
             String[] users = new String[usuarios.size()];
             String[] contrasenias = new String[usuarios.size()];
 
-            for (int i = 0; i < usuarios.size(); i++) {
-                users[i] = usuarios.get(i).getUsuario();
-                contrasenias[i] = usuarios.get(i).getContrasenia();
+            Iterator iterador = usuarios.iterator();
+            Usuario usua;
+            int contador = 0;
+            while(iterador.hasNext()){
+                usua = (Usuario) iterador.next();
+                users[contador] = usua.getUsuario();
+                contrasenias[contador] = usua.getContrasenia();
+                contador++;
             }
-
+            
             for (int i = 0; i < users.length; i++) {
-                if (usuario.equals(users[i]) && contrasenia.equals(contrasenias[i])) {
+                if (users[i].equals(usuario) && contrasenias[i].equals(contrasenia)) {
                     calculo = request.getRequestDispatcher("ingresar_indicadores.jsp");
                     u = usuarios.get(i);
                     acti = usuarios.get(i).getTipoact().getIdtact();
@@ -64,13 +69,10 @@ public class login extends MiServlet {
                     nombre = usuarios.get(i).getNombre();
                     request.setAttribute("nombre", nombre);
                     calculo.forward(request, response);
-                    break;
-                } else {
-                    calculo = request.getRequestDispatcher("index.jsp");
-                    calculo.forward(request, response);
                 }
             }
-
+            calculo = request.getRequestDispatcher("index.jsp");
+                    calculo.forward(request, response);
         }
     }
 

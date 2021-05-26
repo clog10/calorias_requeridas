@@ -8,6 +8,7 @@ import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,14 +44,21 @@ public class controlIS extends MiServlet {
             int cintura = Integer.parseInt(request.getParameter("cintura"));
             int cadera = Integer.parseInt(request.getParameter("cadera"));
             int acti = Integer.parseInt(request.getParameter("actividad"));
-
+            String name = request.getParameter("nombre");
             indicador = (IndicadoressaludJpaController) crearControlador();
             user = new UsuarioJpaController(utx, emf);
             controlTA = new TipoactividadJpaController(utx, emf);
 
             List<Usuario> u = user.findEntities();
-            Usuario usuario = u.get(u.size() - 1);
 
+            Usuario usuario= null;
+
+            for(int i =0; i< u.size(); i++){
+                if(u.get(i).getNombre().equals(name)){
+                    usuario = u.get(i);
+                }
+            }
+            
             Indicadoressalud indicadores = new Indicadoressalud();
             indicadores.setFecha(fecha);
             indicadores.setCadera(cadera);
@@ -64,11 +72,20 @@ public class controlIS extends MiServlet {
             double est = indicadores.getEstatura() / 100;
             double imc = indicadores.getPeso() / (est * est);
             double icc = indicadores.getCintura() / indicadores.getCadera();
-            indicador.create(indicadores);
+            //indicador.create(indicadores);
             RequestDispatcher calculo = request.getRequestDispatcher("resultados.jsp");
             request.setAttribute("nombre", nombre);
             request.setAttribute("imc", imc);
             request.setAttribute("icc", icc);
+            
+            String s = request.getParameter("guardar");
+            char guardar = s.charAt(0);
+            
+            if(guardar == 'S'){
+                indicador.create(indicadores);
+                calculo.forward(request, response);
+            }
+            
             calculo.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(controlIS.class.getName()).log(Level.SEVERE, null, ex);

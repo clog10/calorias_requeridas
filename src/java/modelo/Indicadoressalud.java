@@ -64,6 +64,8 @@ public class Indicadoressalud implements Serializable {
     @ManyToOne
     private Usuario idusuario;
 
+    private int edad;
+
     public Indicadoressalud() {
     }
 
@@ -135,6 +137,14 @@ public class Indicadoressalud implements Serializable {
         this.idusuario = idusuario;
     }
 
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -159,5 +169,24 @@ public class Indicadoressalud implements Serializable {
     public String toString() {
         return "modelo.Indicadoressalud[ idindsalud=" + idindsalud + " ]";
     }
-    
+
+    public double grasaCorporal() {
+        double porcentaje = 0;
+        if (idusuario.getSexo() == 'M') {
+            porcentaje = 1.39 * imc() + 0.16 * edad - 10.34 * 0 - 9;
+        } else if (idusuario.getSexo() == 'H') {
+            porcentaje = 1.39 * imc() + 0.16 * edad - 10.34 * 1 - 9;
+        }
+        return porcentaje;
+    }
+
+    public double imc() {
+        estatura = estatura / 100;
+        return peso / (estatura * estatura);
+    }
+
+    public double icc() {
+        return cintura / cadera;
+    }
+
 }

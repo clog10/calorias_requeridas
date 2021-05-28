@@ -35,6 +35,21 @@
                     <td align="right">ICC: </td>
                     <td><input type="text" name="icc" value="${icc}" readonly></td>
                 </tr>
+                <tr>
+                    <td colspan="2" align="center">Kilocalorias Requeridas</td>
+                </tr>
+                <tr>
+                    <td align="center">Fórmula Utilizada: </td>
+                    <td align="center">${formula}</td>
+                </tr>
+                <tr>
+                    <td align="right">Kilocalorias Requeridas: </td>
+                    <td>${calorias}</td>
+                </tr>
+                <tr>
+                    <td align="right">Edad: </td>
+                    <td>${edad}</td>
+                </tr>
             </tbody>
         </table>
         <a href="index.jsp">Volver al inicio</a>

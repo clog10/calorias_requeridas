@@ -1,4 +1,3 @@
-
 package control;
 
 import acceso_datos.IndicadoressaludJpaController;
@@ -8,6 +7,9 @@ import acceso_datos.UsuarioJpaController;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,7 +24,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.UserTransaction;
+import modelo.CaloriasRequeridas;
 import modelo.Indicadoressalud;
+import modelo.MetodoBH;
+import modelo.MetodoHB;
+import modelo.MetodoKC_CS;
 import modelo.Usuario;
 
 /**
@@ -30,7 +36,7 @@ import modelo.Usuario;
  * @author Carlos Loaeza
  */
 public class controlIS extends MiServlet {
-    
+
     @Override
     public void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -51,14 +57,14 @@ public class controlIS extends MiServlet {
 
             List<Usuario> u = user.findEntities();
 
-            Usuario usuario= null;
+            Usuario usuario = null;
 
-            for(int i =0; i< u.size(); i++){
-                if(u.get(i).getNombre().equals(name)){
+            for (int i = 0; i < u.size(); i++) {
+                if (u.get(i).getNombre().equals(name)) {
                     usuario = u.get(i);
                 }
             }
-            
+
             Indicadoressalud indicadores = new Indicadoressalud();
             indicadores.setFecha(fecha);
             indicadores.setCadera(cadera);
@@ -68,24 +74,48 @@ public class controlIS extends MiServlet {
             indicadores.setTipoact(controlTA.findEntity(acti));
             indicadores.setIdusuario(usuario);
 
+            LocalDate hoy = LocalDate.now() ; 
+            int edad = hoy.getYear() - usuario.getFechanacimiento().getYear();
+            edad-=1900;
+            
+            String formula = "";
+            CaloriasRequeridas cr = null;
+            double calorias_requeridas = 0;
+            if (edad >= 20 && edad <= 29) {
+                formula = "Método básico";
+                cr = new MetodoKC_CS();
+                calorias_requeridas = cr.calculo_kc(indicadores);
+            } else if (edad >= 30 && edad <= 59) {
+                formula = "Fórmula de Brian Haycock";
+                cr = new MetodoBH();
+                indicadores.setEdad(edad);
+                calorias_requeridas = cr.calculo_kc(indicadores);
+            } else if (edad >= 60) {
+                formula = "Fórmula de Harris Benedict";
+                cr = new MetodoHB();
+                calorias_requeridas = cr.calculo_kc(indicadores);
+            }
+
             String nombre = usuario.getNombre();
-            double est = indicadores.getEstatura() / 100;
-            double imc = indicadores.getPeso() / (est * est);
-            double icc = indicadores.getCintura() / indicadores.getCadera();
+            double imc = indicadores.imc();
+            double icc = indicadores.icc();
             //indicador.create(indicadores);
             RequestDispatcher calculo = request.getRequestDispatcher("resultados.jsp");
+            request.setAttribute("edad", edad);
+            request.setAttribute("formula", formula);
+            request.setAttribute("calorias", calorias_requeridas);
             request.setAttribute("nombre", nombre);
             request.setAttribute("imc", imc);
             request.setAttribute("icc", icc);
-            
+
             String s = request.getParameter("guardar");
             char guardar = s.charAt(0);
-            
-            if(guardar == 'S'){
+
+            if (guardar == 'S') {
                 indicador.create(indicadores);
                 calculo.forward(request, response);
             }
-            
+
             calculo.forward(request, response);
         } catch (Exception ex) {
             Logger.getLogger(controlIS.class.getName()).log(Level.SEVERE, null, ex);
@@ -94,10 +124,10 @@ public class controlIS extends MiServlet {
 
     @Override
     public JpaControladora crearControlador() {
-         return new IndicadoressaludJpaController(utx, emf);
+        return new IndicadoressaludJpaController(utx, emf);
     }
 
-      // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
